@@ -1,39 +1,69 @@
 <?php
-class buku
-{
-	private $id;
-	private $db;
-	public function __construct($id = null)
-	{
-		$this->id = $id;
+include("koneksiDB/configDB.php");
+include("class/database.php");
+include("class/pengguna.php");
+include("class/session.php");
+include("class/databuku.php");
 
-		//instansiasi objek koneksi DB
-		$database = new database;
-		$this->db = $database->db;
-	}
-	public function DaftarBuku()
- 	{
- 		$daftar = $this->db->query("SELECT * FROM data_buku");
+$session = new session;
+$session->cekHakAkses("petugas");
+$daftar = new buku;
+$DaftarBuku = $daftar->DaftarBuku();
 
- 	    return ($this->db->affected_rows > 0) ? $daftar : FALSE;
- 	}
-    public function TambahDataPeminjaman($tanggal,$Nis,$Nama,$kode_buku,$nama_buku,$tanggal_kembali){
-            $tambah = $this->db->query("INSERT INTO peminjaman_buku (`tanggal`, `Nis`, `Nama`, `kode_buku`, `nama_buku`, `tanggal_kembali`) VALUES ('${tanggal}','${Nis}','${Nama}','${kode_buku}','${nama_buku}','${tanggal_kembali}')");
-    }
-    public function tambahbuku($kode_buku,$nama_buku,$jenis_buku,$jumlah,$foto)
-    { return $this->db->query('INSERT INTO data_buku VALUES("'.$kode_buku.'","'.$nama_buku.'","'.$jenis_buku.'",
-			"'.$jumlah.'","'.$foto.'")'); 
-    }
-    
-    public function hapus($kode_buku){
-        $hapus = $this->db->query("DELETE FROM data_buku WHERE kode_buku='$kode_buku'");
-    }
-    public function editbuku($kode_buku){
-        $ubah = $this->db->query("SELECT * FROM data_buku WHERE kode_buku='$kode_buku'");
-        return $ubah;
-    }
-    public function updatebuku($kode_buku,$nama_buku,$jenis_buku,$jumlah,$foto){
-        $update = $this->db->query("UPDATE data_buku SET kode_buku='${kode_buku}',nama_buku='${nama_buku}',jenis_buku='${jenis_buku}',jumlah='${jumlah}',foto='${foto}' WHERE kode_buku='$kode_buku'");
-    }
-}
+
 ?>
+<html>
+	<head>
+	<title>Data Buku</title>
+	<link href="style.css" rel="stylesheet" type="text/css" media="all" />
+	</head>
+	<body>
+		<div class="atas">
+		<img  src="20540172.png" width="100" height="100" align="left">
+		<h2><center>SISTEM INFORMASI PERPUSTAKAAN SMA PGRI SRONO</h2></center>
+		
+		<center><h3>Jl. MOJOPAHIT NO:03 SRONO</h3></center>
+		</div>
+		<div class="tengah">
+		<nav>
+    <ul>
+        <li align="left"><a href="datapinjam.php" >Data Peminjaman</a></li>
+        <li align="left"><a href="peminjaman.php" >Peminjaman </a></li>
+        <li align="left"><a href="databuku.php" >Data Buku</a></li>
+        <li align="left"><a href="logout.php" onClick="return confirm ('Apakah Anda Yakin Ingin Keluar?')">Logout</a></li>
+    </ul>
+</nav>
+		</div>
+		<div class="home">
+        <table border="2">  
+         <tr>
+         <th>nomer</th>
+         <th>kode_buku</th>
+         <th>Nama_buku</th>
+         <th>jenis_buku</th>
+         <th>jumlah</th>
+         <th>foto</th>
+         </tr>
+     
+<?php
+$nomer = 1;
+
+    foreach($DaftarBuku as $buku) {?>
+
+        <tr>
+        <td><?php echo $nomer++; ?></td>
+        <td><?php echo $buku['kode_buku']?></td>
+        <td><?php echo $buku['nama_buku']?></td>
+        <td><?php echo $buku['jenis_buku']?></td>
+        <td><?php echo $buku['jumlah']?></td>
+        <td><?php echo $buku['foto']?></td>
+           
+        </tr>
+
+        <?php
+        }
+        ?>
+         </table></div>
+
+	</body>
+</html>
